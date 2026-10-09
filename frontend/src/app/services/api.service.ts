@@ -7,8 +7,9 @@ import { DashboardStats, ResourceItem, Scheme, UserSession, Video } from '../mod
 export class ApiService {
   private http = inject(HttpClient);
   private readonly baseUrl = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? 'http://localhost:8081'
-    : '';
+? 'http://localhost:8081'
+: 'https://jansahayak-ubq8.onrender.com';
+
   private readonly schemeStorageKey = 'jansahayak.schemes';
   private readonly videoStorageKey = 'jansahayak.videos';
   private readonly resourceStorageKey = 'jansahayak.resources';
