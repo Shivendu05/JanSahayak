@@ -1,0 +1,53 @@
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">J</span>
+    <div>
+      <strong>Jan Sahayak</strong>
+      <small>Public welfare portal</small>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a routerLink="/">Home</a>
+    <a routerLink="/schemes">Schemes</a>
+    <a routerLink="/videos">Videos</a>
+    <a routerLink="/resources">Resources</a>
+    <a *ngIf="currentUser?.role === 'USER'" routerLink="/saved">Saved</a>
+    <a *ngIf="currentUser?.role === 'ADMIN'" routerLink="/admin">Admin</a>
+  </nav>
+
+  <div class="nav-actions">
+    <ng-container *ngIf="isLoggedIn; else guestActions">
+      <span class="user-chip">{{ currentUser?.name }}</span>
+      <button type="button" class="secondary-btn compact" (click)="logout()">Logout</button>
+    </ng-container>
+    <ng-template #guestActions>
+      <a routerLink="/login" class="secondary-btn compact">Citizen login</a>
+      <a routerLink="/admin-login" class="secondary-btn compact">Admin login</a>
+      <a routerLink="/register" class="primary-btn compact">Register</a>
+    </ng-template>
+  </div>
+</header>
+
+<main class="page-shell">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <strong>Jan Sahayak</strong>
+    <p>Helping citizens discover welfare schemes and useful government resources.</p>
+  </div>
+  <div>
+    <h4>Quick links</h4>
+    <a routerLink="/schemes">Schemes</a>
+    <a routerLink="/videos">Videos</a>
+    <a routerLink="/resources">Resources</a>
+  </div>
+  <div>
+    <h4>Contact</h4>
+    <a href="mailto:support@jansahayak.in">
+  support@jansahayak.in
+</a>
+  </div>
+</footer>
