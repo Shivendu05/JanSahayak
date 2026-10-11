@@ -1,6 +1,7 @@
 package com.jansahayak.controller;
 
 import com.jansahayak.repository.ResourceRepository;
+import com.jansahayak.repository.BookmarkRepository;
 import com.jansahayak.repository.SchemeRepository;
 import com.jansahayak.repository.UserRepository;
 import com.jansahayak.repository.VideoRepository;
@@ -19,15 +20,18 @@ public class DashboardController {
     private final ResourceRepository resourceRepository;
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public DashboardController(SchemeRepository schemeRepository,
             ResourceRepository resourceRepository,
             VideoRepository videoRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            BookmarkRepository bookmarkRepository) {
         this.schemeRepository = schemeRepository;
         this.resourceRepository = resourceRepository;
         this.videoRepository = videoRepository;
         this.userRepository = userRepository;
+        this.bookmarkRepository = bookmarkRepository;
     }
 
     @GetMapping("/dashboard")
@@ -37,6 +41,7 @@ public class DashboardController {
         stats.put("totalResources", resourceRepository.count());
         stats.put("totalVideos", videoRepository.count());
         stats.put("totalUsers", userRepository.count());
+        stats.put("totalBookmarks", bookmarkRepository.count());
         return stats;
     }
 }

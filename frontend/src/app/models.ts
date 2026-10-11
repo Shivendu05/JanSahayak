@@ -51,4 +51,5 @@ export interface DashboardStats {
   totalResources: number;
   totalVideos: number;
   totalUsers: number;
+  totalBookmarks: number;
 }

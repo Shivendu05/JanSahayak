@@ -2,6 +2,8 @@
 
 Jan Sahayak is a beginner-friendly welfare portal for Indian citizens. It helps users discover useful government schemes, eligibility information, official portals, videos, and support resources from one simple dashboard.
 
+For a detailed beginner-friendly walkthrough of the architecture, code folders, API/data flow, authentication, and deployment, see [PROJECT_EXPLANATION.md](PROJECT_EXPLANATION.md).
+
 ## Verified project status
 
 The project was validated locally with fresh evidence:

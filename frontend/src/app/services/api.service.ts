@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 import { DashboardStats, ResourceItem, Scheme, UserSession, Video } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -276,12 +276,39 @@ export class ApiService {
     return this.http.get<DashboardStats>(`${this.baseUrl}/api/dashboard`);
   }
 
+  getAdminContent(): Observable<{ schemes: Scheme[]; videos: Video[]; resources: ResourceItem[] }> {
+    return forkJoin({
+      schemes: this.http.get<Scheme[]>(`${this.baseUrl}/api/schemes`),
+      videos: this.http.get<Video[]>(`${this.baseUrl}/api/videos`),
+      resources: this.http.get<ResourceItem[]>(`${this.baseUrl}/api/resources`)
+    });
+  }
+
   addScheme(scheme: Partial<Scheme>): Observable<Scheme> {
     return this.http.post<Scheme>(`${this.baseUrl}/api/schemes`, scheme).pipe(
       map((created) => {
         const existing = this.readLocalList(this.schemeStorageKey, this.fallbackSchemes);
         this.writeLocalList(this.schemeStorageKey, [created, ...existing.filter((item) => item.id !== created.id)]);
         return created;
+      })
+    );
+  }
+
+  updateScheme(id: number, scheme: Partial<Scheme>): Observable<Scheme> {
+    return this.http.put<Scheme>(`${this.baseUrl}/api/schemes/${id}`, scheme).pipe(
+      map((updated) => {
+        const existing = this.readLocalList(this.schemeStorageKey, this.fallbackSchemes);
+        this.writeLocalList(this.schemeStorageKey, existing.map((item) => item.id === id ? updated : item));
+        return updated;
+      })
+    );
+  }
+
+  deleteScheme(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/schemes/${id}`).pipe(
+      map(() => {
+        const existing = this.readLocalList(this.schemeStorageKey, this.fallbackSchemes);
+        this.writeLocalList(this.schemeStorageKey, existing.filter((item) => item.id !== id));
       })
     );
   }
@@ -296,12 +323,50 @@ export class ApiService {
     );
   }
 
+  updateVideo(id: number, video: Partial<Video>): Observable<Video> {
+    return this.http.put<Video>(`${this.baseUrl}/api/videos/${id}`, video).pipe(
+      map((updated) => {
+        const existing = this.readLocalList(this.videoStorageKey, this.fallbackVideos);
+        this.writeLocalList(this.videoStorageKey, existing.map((item) => item.id === id ? updated : item));
+        return updated;
+      })
+    );
+  }
+
+  deleteVideo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/videos/${id}`).pipe(
+      map(() => {
+        const existing = this.readLocalList(this.videoStorageKey, this.fallbackVideos);
+        this.writeLocalList(this.videoStorageKey, existing.filter((item) => item.id !== id));
+      })
+    );
+  }
+
   addResource(resource: Partial<ResourceItem>): Observable<ResourceItem> {
     return this.http.post<ResourceItem>(`${this.baseUrl}/api/resources`, resource).pipe(
       map((created) => {
         const existing = this.readLocalList(this.resourceStorageKey, this.fallbackResources);
         this.writeLocalList(this.resourceStorageKey, [created, ...existing.filter((item) => item.id !== created.id)]);
         return created;
+      })
+    );
+  }
+
+  updateResource(id: number, resource: Partial<ResourceItem>): Observable<ResourceItem> {
+    return this.http.put<ResourceItem>(`${this.baseUrl}/api/resources/${id}`, resource).pipe(
+      map((updated) => {
+        const existing = this.readLocalList(this.resourceStorageKey, this.fallbackResources);
+        this.writeLocalList(this.resourceStorageKey, existing.map((item) => item.id === id ? updated : item));
+        return updated;
+      })
+    );
+  }
+
+  deleteResource(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/resources/${id}`).pipe(
+      map(() => {
+        const existing = this.readLocalList(this.resourceStorageKey, this.fallbackResources);
+        this.writeLocalList(this.resourceStorageKey, existing.filter((item) => item.id !== id));
       })
     );
   }
